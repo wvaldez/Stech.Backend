@@ -1,0 +1,7 @@
+﻿namespace Stech.Backend.Core
+{
+    public interface IEntity
+    {
+        int Id { get; set; }
+    }
+}
