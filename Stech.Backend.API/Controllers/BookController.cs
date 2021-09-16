@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Stech.Backend.Core;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,14 @@ namespace Stech.Backend.API.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IRepository<Book> _bookRepository;
+        private readonly ILogger<BookController> _logger;
 
-        public BookController(IBookRepository bookRepository)
+
+        public BookController(IRepository<Book> bookRepository, ILogger<BookController> logger)
         {
-            this._bookRepository = bookRepository;
+            _bookRepository = bookRepository;
+            _logger = logger;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -74,12 +78,15 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                if(_bookRepository.Get(book.Id) is null)
+                var entity = _bookRepository.Get(book.Id);
+                if ( entity is null)
                 {
                     return BadRequest();
                 }
 
-                await _bookRepository.UpdateAsync(book);
+                entity = book;
+
+                _bookRepository.SaveChanges();
 
                 return Ok(book);
             }
@@ -125,7 +132,12 @@ namespace Stech.Backend.API.Controllers
                 {
                     return BadRequest();
                 }
-                await _bookRepository.Sell(bookId);
+
+                book.Sell();
+
+                _bookRepository.SaveChanges();
+
+                _logger.LogInformation("SellBook called. Sale #"+book.SalesCount);
 
                 return Ok();
             }

@@ -11,8 +11,8 @@ namespace Stech.Backend.Core
 
         Task<T> AddAsync(T entity);
 
-        Task<T> UpdateAsync(T entity);
-
         void Remove(T entity);
+
+        void SaveChanges();
     }
 }

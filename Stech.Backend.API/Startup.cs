@@ -31,7 +31,7 @@ namespace Stech.Backend.API
 
             services.AddControllers();
 
-            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IStechDbContext, StechDbContext>();
             services.AddDbContext<StechDbContext>(opt => opt.UseInMemoryDatabase(databaseName: Configuration["Databasename"]));
@@ -46,12 +46,12 @@ namespace Stech.Backend.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            // if (env.IsDevelopment())
+            // {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Stech.Backend.API v1"));
-            }
+            // }
 
             app.UseRouting();
 

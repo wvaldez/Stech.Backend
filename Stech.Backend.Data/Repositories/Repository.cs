@@ -40,10 +40,9 @@ namespace Stech.Backend.Data
             _database.SaveAsync();
         }
 
-        public Task<T> UpdateAsync(T entity)
+        public async void SaveChanges()
         {
-            _database.SaveAsync();
-            throw new NotImplementedException();   
+            await _database.SaveAsync();
         }
     }
 }
