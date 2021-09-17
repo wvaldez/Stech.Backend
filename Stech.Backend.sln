@@ -4,12 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stech.Backend.API", "Stech.Backend.API\Stech.Backend.API.csproj", "{2D1FA0B5-288D-48EC-AA5C-8D63902E3647}"
+	ProjectSection(ProjectDependencies) = postProject
+		{37AB246F-C9C1-4893-AD2B-2A9DBB051D2C} = {37AB246F-C9C1-4893-AD2B-2A9DBB051D2C}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stech.Backend.Console", "Stech.Backend.Console\Stech.Backend.Console.csproj", "{448BAB42-DED2-4D13-9D77-936AB2A84B2B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stech.Backend.Data", "Stech.Backend.Data\Stech.Backend.Data.csproj", "{7DF5FB53-421C-4865-B078-8917904639EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stech.Backend.Core", "Stech.Backend.Core\Stech.Backend.Core.csproj", "{37AB246F-C9C1-4893-AD2B-2A9DBB051D2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stech.Backend.Core", "Stech.Backend.Core\Stech.Backend.Core.csproj", "{37AB246F-C9C1-4893-AD2B-2A9DBB051D2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

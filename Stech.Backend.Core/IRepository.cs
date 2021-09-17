@@ -5,14 +5,14 @@ namespace Stech.Backend.Core
 {
     public interface IRepository<T>
     {
-        IQueryable<T> GetAll();
+        Task<IQueryable<T>> GetAll();
 
-        T Get(int id);
+        Task<T> Get(int id);
 
         Task<T> AddAsync(T entity);
 
-        void Remove(T entity);
+        Task Remove(T entity);
 
-        void SaveChanges();
+        Task SaveChanges();
     }
 }

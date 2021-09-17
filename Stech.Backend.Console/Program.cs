@@ -15,19 +15,49 @@ namespace Stech.Backend.Console
         private static HttpClient client = new HttpClient();
         static async Task Main(string[] args)
         {
-            // Get all books from list
-            client.BaseAddress = new Uri("http://localhost:55623/");
-            var booksresponse = await client.GetAsync("api/book");
-            var books = JsonSerializer.Deserialize<List<Book>>(await booksresponse.Content.ReadAsStringAsync());
-            System.Console.WriteLine("Book name | Sales count | Average elapsed time");
-
-            foreach (var book in books.Take(5))
+            try
             {
-                Task.Run(SellBook(book.Id));
+                client.BaseAddress = new Uri("http://localhost:55623/");
+                
+                //First insert 5 books, for testing purpose
+                AddBooks();
+                
+                // Get all books from list                
+                var booksresponse = await client.GetAsync("api/book");
+                var books = JsonSerializer.Deserialize<List<Book>>(await booksresponse.Content.ReadAsStringAsync());
+
+                var tasksBooks = new List<Task>();
+
+                System.Console.WriteLine("Book name\t|\tSales count\t|\tAverage elapsed time");
+
+                Parallel.ForEach(books, (book) => 
+                {
+                    tasksBooks.Add(SellBook(book.Id));
+                });
+             
+                Task.WaitAll(tasksBooks.ToArray());
             }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+                throw;
+            }
+            
         }
 
-        public static async Action SellBook(int bookId)
+        private static void AddBooks()
+        {
+            for(int i = 1; i <= 5; i++)
+            {
+                Book book = new Book();
+                book.Name = "Book " + i;
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/book/");
+                requestMessage.Content = new StringContent(JsonSerializer.Serialize(book), Encoding.UTF8, "application/json");
+                client.SendAsync(requestMessage);
+            }            
+        }
+
+        public static async Task SellBook(int bookId)
         {
             var tasks = new List<Task<HttpResponseMessage>>();
             Stopwatch sw = Stopwatch.StartNew();
@@ -42,12 +72,11 @@ namespace Stech.Backend.Console
             sw.Stop();
 
             // Retrieve up to date book information
-            client.BaseAddress = new Uri("http://localhost:55623/");
             var bookresponse = await client.GetAsync("api/book/"+bookId);
             var book = JsonSerializer.Deserialize<Book>(await bookresponse.Content.ReadAsStringAsync());
             
             // Print to screen
-            System.Console.WriteLine(book.Name + " | " + book.SalesCount + " | " + sw.ElapsedMilliseconds / 1000 + "ms");
+            System.Console.WriteLine(book.Name + "\t|\t" + book.SalesCount + "\t|\t" + sw.ElapsedMilliseconds / 1000 + "ms");
         }
     }
 }

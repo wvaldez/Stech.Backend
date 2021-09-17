@@ -11,12 +11,9 @@ namespace Stech.Backend.Core
         [JsonPropertyName("name")]
         public string Name { get; set; }
         [JsonPropertyName("author")]
-        public Author Author { get; set; }
+        public virtual Author Author { get; set; }
         [JsonPropertyName("salesCount")]
-        public int SalesCount { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public int SalesCount { get; set; }        
 
         public void Sell()
         {

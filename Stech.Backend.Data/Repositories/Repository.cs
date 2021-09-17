@@ -16,14 +16,14 @@ namespace Stech.Backend.Data
             _database = database;
         }
 
-        public IQueryable<T> GetAll()
+        public async Task<IQueryable<T>> GetAll()
         {
             return _database.Set<T>();
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return _database.Set<T>()
+            return _database.Set<T>()                
                 .FirstOrDefault(p => p.Id == id);
         }
 
@@ -34,13 +34,13 @@ namespace Stech.Backend.Data
             return result.Entity;
         }
 
-        public void Remove(T entity)
+        public async Task Remove(T entity)
         {
             _database.Set<T>().Remove(entity);
-            _database.SaveAsync();
+            await _database.SaveAsync();
         }
 
-        public async void SaveChanges()
+        public async Task SaveChanges()
         {
             await _database.SaveAsync();
         }

@@ -32,6 +32,7 @@ namespace Stech.Backend.API
             services.AddControllers();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddScoped<IStechDbContext, StechDbContext>();
             services.AddDbContext<StechDbContext>(opt => opt.UseInMemoryDatabase(databaseName: Configuration["Databasename"]));

@@ -13,11 +13,11 @@ namespace Stech.Backend.API.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IRepository<Book> _bookRepository;
+        private readonly IBookRepository _bookRepository;
         private readonly ILogger<BookController> _logger;
 
 
-        public BookController(IRepository<Book> bookRepository, ILogger<BookController> logger)
+        public BookController(IBookRepository bookRepository, ILogger<BookController> logger)
         {
             _bookRepository = bookRepository;
             _logger = logger;
@@ -27,12 +27,12 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var result = _bookRepository.GetAll();
+                var result = await _bookRepository.GetAll();
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                //TODO: Logging
+                _logger.LogError(ex, "Can't get books");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't get books");
             }
@@ -42,7 +42,7 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var result = _bookRepository.Get(bookId);
+                var result = await _bookRepository.Get(bookId);
                 if (result is null)
                 {
                     return NotFound();
@@ -51,7 +51,7 @@ namespace Stech.Backend.API.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: Logging
+                _logger.LogError(ex, "Can't get book");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't get the book");
             }
@@ -62,12 +62,12 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var result = await _bookRepository.AddAsync(book);                
+                var result = await _bookRepository.AddAsync(book);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                //TODO: Logging
+                _logger.LogError(ex, "Can't create book");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't create a book");
             }
@@ -78,21 +78,21 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var entity = _bookRepository.Get(book.Id);
-                if ( entity is null)
+                var entity = await _bookRepository.Get(book.Id);
+                if (entity is null)
                 {
                     return BadRequest();
                 }
 
                 entity = book;
 
-                _bookRepository.SaveChanges();
+                await _bookRepository.SaveChanges();
 
                 return Ok(book);
             }
             catch (Exception ex)
             {
-                //TODO: Logging
+                _logger.LogError(ex, "Can't update book");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't update the book");
             }
@@ -103,19 +103,19 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = await _bookRepository.Get(bookId);
 
-                if(book is null)
+                if (book is null)
                 {
                     return BadRequest();
                 }
 
-                _bookRepository.Remove(book);
+                await _bookRepository.Remove(book);
                 return Ok();
             }
             catch (Exception ex)
             {
-                //TODO: Logging
+                _logger.LogError(ex, "Can't delete book");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't delete the book");
 
@@ -127,23 +127,22 @@ namespace Stech.Backend.API.Controllers
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
-                if(book is null)
+                var book = await _bookRepository.Get(bookId);
+                if (book is null)
                 {
                     return BadRequest();
                 }
 
-                book.Sell();
+                await _bookRepository.Sell(book.Id);
 
-                _bookRepository.SaveChanges();
 
-                _logger.LogInformation("SellBook called. Sale #"+book.SalesCount);
+                _logger.LogInformation("SellBook called " + book.Name + ". Sale #" + book.SalesCount);
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: loggin
+                _logger.LogError(ex, "Can't sell book");
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new JsonResult("Can't sell this book");
             }

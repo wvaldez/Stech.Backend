@@ -11,10 +11,10 @@ COPY ["Stech.Backend.Data/Stech.Backend.Data.csproj", "Stech.Backend.Data/"]
 RUN dotnet restore "Stech.Backend.API/Stech.Backend.API.csproj"
 COPY . .
 WORKDIR "/src/Stech.Backend.API"
-RUN dotnet build "Stech.Backend.API.csproj" -c Debug -o /app/build
+RUN dotnet build "Stech.Backend.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Stech.Backend.API.csproj" -c Debug -o /app/publish
+RUN dotnet publish "Stech.Backend.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Stech.Backend.Data
 {
-    public class StechDbContext:DbContext, IStechDbContext
+    public class StechDbContext : DbContext, IStechDbContext
     {
         public StechDbContext(DbContextOptions<StechDbContext> options) : base(options) { }
 
@@ -17,6 +17,13 @@ namespace Stech.Backend.Data
         public new DbSet<T> Set<T>() where T : class
         {
             return base.Set<T>();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()
+                .Property(b => b.SalesCount)
+                .IsConcurrencyToken();
         }
 
         public async Task SaveAsync()
