@@ -14,7 +14,7 @@ The dockerfile is at the solution level, it doesn't need anything than docker in
 
 
 ## Live web api
-[Stechwalter API](stechwalter.eastus.azurecontainer.io/swagger)
+[Stechwalter API](http://stechwalter.eastus.azurecontainer.io/swagger/)
 
 ## Contact
 Feel free to contact me by [email](mailto:w.valdez@outlook.com) and we can talk if you have some questions or any comments.
