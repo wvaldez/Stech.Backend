@@ -1,4 +1,4 @@
-# Sech backend
+# Stech backend
 
 Code challenge for Stech backend position
 
